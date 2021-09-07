@@ -23,7 +23,7 @@ weatherServer.get("/weather", (req, res) => {
   let forcast = [];
   forcast = result.data.map((item, i) => {
     return {
-      data: result.data[i].datetime,
+      date: result.data[i].datetime,
       description: result.data[i].weather.description,
     };
   });
