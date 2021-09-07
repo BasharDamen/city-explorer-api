@@ -24,14 +24,10 @@ weatherServer.get("/weather", (req, res) => {
   forcast = result.data.map((item, i) => {
     return {
       date: result.data[i].datetime,
-      description: result.data[i].weather.description,
+      description: `Low of ${result.data[i].low_temp}, high of ${result.data[i].high_temp} with ${result.data[i].weather.description}`,
     };
   });
-  console.log(lat);
-  console.log(lon);
-  console.log(searchQuery);
-  console.log(forcast);
-  console.log(result.data[0].weather.description);
+  
   res.send(forcast);
 });
 //Error
