@@ -2,34 +2,71 @@
 
 require("dotenv").config();
 const express = require("express");
-const cors = require("cors");
-const weatherData = require("./data/weather.json");
-
 const weatherServer = express();
+const cors = require("cors");
+const axios = require("axios");
 
 weatherServer.use(cors());
 
 const PORT = process.env.PORT;
 
-// http://localhost:3010/weather?lat=''&lon=''&searchQuery=''
-weatherServer.get("/weather", (req, res) => {
-  const lat = req.query.lat;
-  const lon = req.query.lon;
-  const searchQuery = req.query.searchQuery;
-  const result = weatherData.find((item) => {
-    if (item.city_name === searchQuery || item.lat === lat || item.lon === lon){return item};
-  });
-
-  let forcast = [];
-  forcast = result.data.map((item, i) => {
-    return {
-      date: result.data[i].datetime,
-      description: `Low of ${result.data[i].low_temp}, high of ${result.data[i].high_temp} with ${result.data[i].weather.description}`,
-    };
-  });
-  
-  res.send(forcast);
+// http://localhost:3010/weather?city_name=''
+weatherServer.get("/", (req, res) => {
+  res.send("You Are Welcome");
 });
+
+// https://api.weatherbit.io/v2.0/forecast/daily?city=Raleigh,NC&key=API_KEY
+// http://localhost:3010/weather?city_name=''
+weatherServer.get("/weather", (req, res) => {
+  let query = req.query.city_name;
+  let lat = req.query.lat;
+  let lon = req.query.lon;
+
+  let weatherURL = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&city=${query}&key=${process.env.WEATHER_API_KEY}`;
+
+  axios
+    .get(weatherURL)
+    .then((result) => {
+      let newForcast = result.data.data.map((item, i) => {
+        return new Forcast(item);
+      });
+      res.send(newForcast);
+    })
+    .catch((err) => console.log(err));
+});
+let forcastArray = [];
+function Forcast(item) {
+  this.description = `Low of ${item.low_temp}, high of ${item.max_temp} with ${item.weather.description}`;
+  this.date = item.datetime;
+  forcastArray.push(this);
+}
+let movieArray = [];
+
+// https://api.themoviedb.org/3/movie/157336?api_key={api_key}
+// http://localhost:3010/movie?origin_country=""
+weatherServer.get("/movie", (req, res) => {
+  let query = req.query.origin_country;
+  let movieURL = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query}`;
+
+  axios
+    .get(movieURL)
+    .then((result) => {
+      let newMovie = result.data.results.map((i) => {
+        return new Movie(i);
+      });
+      movieArray.push(newMovie);
+      res.send(movieArray);
+    })
+    .catch((err) => console.log(err));
+});
+function Movie(item) {
+  this.title = item.original_title;
+  this.overview = item.overview;
+  this.avgVotes = item.vote_average;
+  this.imageURL = `https://image.tmdb.org/t/p/w500${item.poster_path}`;
+  this.popularity = item.popularity;
+  this.released = item.release_date;
+}
 //Error
 weatherServer.get("*", (req, res) => {
   res.status(500).send("Page Not Found!");
