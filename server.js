@@ -43,12 +43,11 @@ function Forcast(item) {
 // http://localhost:3010/movie?origin_country=""
 weatherServer.get("/movie", (req, res) => {
   let query = req.query.origin_country;
-  let movieURL = `https://api.themoviedb.org/3/search/multi?api_key=${process.env.MOVIE_API_KEY}&query=${query}`;
+  let movieURL = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query}`;
   
   axios
   .get(movieURL)
   .then((result) => {
-    // console.log(result.data.results);
     let newMovie = result.data.results.map((item,i)=>{
       return new Movie(item)
     })
