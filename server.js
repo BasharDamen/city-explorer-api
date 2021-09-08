@@ -14,7 +14,7 @@ const PORT = process.env.PORT;
 weatherServer.get("/", (req, res) => {
   res.send("You Are Welcome");
 });
-
+/*----------------------------------------------------------------------------------------------------*/
 // https://api.weatherbit.io/v2.0/forecast/daily?city=Raleigh,NC&key=API_KEY
 // http://localhost:3010/weather?city_name=''
 weatherServer.get("/weather", (req, res) => {
@@ -38,8 +38,8 @@ function Forcast(item) {
   this.date = item.datetime;
   forcastArray.push(this);
 }
+/*----------------------------------------------------------------------------------------------------*/
 let movieArray = [];
-
 // https://api.themoviedb.org/3/movie/157336?api_key={api_key}
 // http://localhost:3010/movie?origin_country=""
 weatherServer.get("/movie", (req, res) => {
