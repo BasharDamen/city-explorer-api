@@ -19,10 +19,8 @@ weatherServer.get("/", (req, res) => {
 // http://localhost:3010/weather?city_name=''
 weatherServer.get("/weather", (req, res) => {
   let query = req.query.city_name;
-  let lat = req.query.lat;
-  let lon = req.query.lon;
 
-  let weatherURL = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&city=${query}&key=${process.env.WEATHER_API_KEY}`;
+  let weatherURL = `https://api.weatherbit.io/v2.0/forecast/daily?city=${query}&key=${process.env.WEATHER_API_KEY}`;
 
   axios
     .get(weatherURL)
