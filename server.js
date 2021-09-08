@@ -48,10 +48,10 @@ weatherServer.get("/movie", (req, res) => {
   axios
   .get(movieURL)
   .then((result) => {
-    let newMovie = result.data.results.map((i) => {
-      return new Movie(i);
-    });
-    res.send(newMovie);
+    let newMovie = result.data.results.map(item=>{
+      return new Movie(item)
+    })
+    res.send(newMovie)
   })
   .catch((err) => console.log(err));
 });
