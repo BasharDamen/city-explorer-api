@@ -1,7 +1,7 @@
 let forcastArray = [];
-function Forcast(item) {
-  this.description = `Low of ${item.low_temp}, high of ${item.max_temp} with ${item.weather.description}`;
-  this.date = item.datetime;
+function Forcast(day) {
+  this.description = `Low of ${day.low_temp}, high of ${day.max_temp} with ${day.weather.description}`;
+  this.date = day.datetime;
   forcastArray.push(this);
 }
 
