@@ -2,19 +2,27 @@ const { default: axios } = require("axios");
 require("dotenv").config();
 
 let movies = require('./movie')
+let movieMemory = [];
+
 function generateMovisData(req, res) {
   let query = req.query.origin_country;
   let movieURL = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${query}`;
 
-  axios
-    .get(movieURL)
-    .then((result) => {
-      let newMovie = result.data.results.map((item, i) => {
-        return new movies(item);
-      });
-      res.send(newMovie);
-    })
-    .catch((err) => console.log(err));
+  if(movieMemory[query] !== undefined){
+    res.send(movieMemory[query])
+  }else{
+    axios
+      .get(movieURL)
+      .then((result) => {
+        let newMovie = result.data.results.map((item, i) => {
+          return new movies(item);
+        });
+        movieMemory[query] = newMovie
+        res.send(newMovie);
+      })
+      .catch((err) => console.log(err));
+    
+  }
 }
 
 
